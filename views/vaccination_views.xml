@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vaccination list View -->
+    <record id="view_vaccination_list" model="ir.ui.view">
+        <field name="name">hr.employee.vaccination.list</field>
+        <field name="model">hr.employee.vaccination</field>
+        <field name="arch" type="xml">
+            <list string="Vaccination Records" decoration-danger="expiry_date and expiry_date &lt; current_date">
+                <field name="employee_id"/>
+                <field name="vaccine_type"/>
+                <field name="vaccine_name"/>
+                <field name="vaccination_date"/>
+                <field name="dose_number"/>
+                <field name="batch_number" optional="hide"/>
+                <field name="manufacturer" optional="show"/>
+                <field name="vaccination_center"/>
+                <field name="expiry_date" widget="remaining_days"/>
+                <field name="next_dose_date" widget="remaining_days" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vaccination Form View -->
+    <record id="view_vaccination_form" model="ir.ui.view">
+        <field name="name">hr.employee.vaccination.form</field>
+        <field name="model">hr.employee.vaccination</field>
+        <field name="arch" type="xml">
+            <form string="Vaccination Record">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="vaccine_type"/>
+                            <field name="vaccine_name"/>
+                            <field name="vaccination_date"/>
+                            <field name="dose_number"/>
+                        </group>
+                        <group>
+                            <field name="batch_number"/>
+                            <field name="manufacturer"/>
+                            <field name="administered_by"/>
+                            <field name="vaccination_center"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="validity_period"/>
+                            <field name="expiry_date"/>
+                            <field name="next_dose_date"/>
+                        </group>
+                        <group>
+                            <field name="certificate_number"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Side Effects &amp; Notes">
+                            <group>
+                                <field name="side_effects"/>
+                                <field name="notes"/>
+                            </group>
+                        </page>
+                        <page string="Certificates">
+                            <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vaccination Calendar View -->
+    <record id="view_vaccination_calendar" model="ir.ui.view">
+        <field name="name">hr.employee.vaccination.calendar</field>
+        <field name="model">hr.employee.vaccination</field>
+        <field name="arch" type="xml">
+            <calendar string="Vaccinations" date_start="vaccination_date" color="vaccine_type">
+                <field name="employee_id"/>
+                <field name="vaccine_name"/>
+                <field name="dose_number"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Vaccination Search View -->
+    <record id="view_vaccination_search" model="ir.ui.view">
+        <field name="name">hr.employee.vaccination.search</field>
+        <field name="model">hr.employee.vaccination</field>
+        <field name="arch" type="xml">
+            <search string="Vaccinations">
+                <field name="employee_id"/>
+                <field name="vaccine_name"/>
+                <field name="vaccine_type"/>
+                <filter string="COVID-19" name="covid" domain="[('vaccine_type', '=', 'covid19')]"/>
+                <filter string="Expiring Soon" name="expiring" domain="[('expiry_date', '&lt;=', (context_today() + relativedelta(months=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Expired" name="expired" domain="[('expiry_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="This Year" name="this_year" domain="[('vaccination_date', '&gt;=', (context_today() - relativedelta(years=1)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Vaccine Type" name="group_vaccine_type" context="{'group_by': 'vaccine_type'}"/>
+                    <filter string="Dose" name="group_dose" context="{'group_by': 'dose_number'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by': 'vaccination_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vaccination Action Form -->
+    <record id="action_vaccination_form" model="ir.actions.act_window">
+        <field name="name">Add Vaccination</field>
+        <field name="res_model">hr.employee.vaccination</field>
+        <field name="view_mode">form,list</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

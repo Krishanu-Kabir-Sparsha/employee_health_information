@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================= -->
+    <!-- Health Statistics Dashboard Action -->
+    <!-- ============================= -->
+    <record id="action_health_statistics" model="ir.actions.act_window">
+        <field name="name">Health Statistics</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="context">{'search_default_group_fitness': 1}</field>
+    </record>
+
+    <!-- Graph View for Health Statistics -->
+    <record id="view_employee_health_graph" model="ir.ui.view">
+        <field name="name">hr.employee.health.graph</field>
+        <field name="model">hr.employee</field>
+        <field name="arch" type="xml">
+            <graph string="Health Statistics" type="bar" stacked="True">
+                <field name="department_id"/>
+                <field name="fitness_status"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Pivot View for Health Analysis -->
+    <record id="view_employee_health_pivot" model="ir.ui.view">
+        <field name="name">hr.employee.health.pivot</field>
+        <field name="model">hr.employee</field>
+        <field name="arch" type="xml">
+            <pivot string="Health Analysis">
+                <field name="department_id" type="row"/>
+                <field name="blood_group" type="col"/>
+                <field name="fitness_status" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Menu Items for Reports -->
+    <menuitem id="menu_health_statistics" 
+              name="Statistics" 
+              parent="menu_health_reports" 
+              action="action_health_statistics" 
+              sequence="10"/>
+              
+    <menuitem id="menu_print_health_card" 
+              name="Print Health Cards" 
+              parent="menu_health_reports" 
+              action="report_employee_health_card" 
+              sequence="20"/>
+
+    <menuitem id="menu_health_summary_report" 
+              name="Health Summary" 
+              parent="menu_health_reports" 
+              action="report_employee_health_summary" 
+              sequence="30"/>
+</odoo>

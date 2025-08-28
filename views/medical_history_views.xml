@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Medical History list View -->
+    <record id="view_medical_history_list" model="ir.ui.view">
+        <field name="name">hr.employee.medical.history.list</field>
+        <field name="model">hr.employee.medical.history</field>
+        <field name="arch" type="xml">
+            <list string="Medical History" decoration-danger="severity == 'critical'" decoration-warning="severity == 'severe'">
+                <field name="employee_id"/>
+                <field name="date"/>
+                <field name="condition"/>
+                <field name="condition_type"/>
+                <field name="severity" widget="badge"/>
+                <field name="doctor_name"/>
+                <field name="is_ongoing" widget="boolean_toggle"/>
+                <field name="recovery_date"/>
+                <field name="follow_up_required" widget="boolean_toggle"/>
+                <field name="follow_up_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Medical History Form View -->
+    <record id="view_medical_history_form" model="ir.ui.view">
+        <field name="name">hr.employee.medical.history.form</field>
+        <field name="model">hr.employee.medical.history</field>
+        <field name="arch" type="xml">
+            <form string="Medical History">
+                <sheet>
+                    <widget name="web_ribbon" title="Ongoing"/>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="date"/>
+                            <field name="condition"/>
+                            <field name="condition_type"/>
+                            <field name="severity" widget="selection_badge"/>
+                        </group>
+                        <group>
+                            <field name="is_ongoing"/>
+                            <field name="doctor_name"/>
+                            <field name="recovery_date"/>
+                            <field name="sick_leave_days"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Treatment">
+                            <group>
+                                <field name="treatment"/>
+                                <field name="medications"/>
+                                <field name="work_restrictions"/>
+                            </group>
+                        </page>
+                        <page string="Follow-up">
+                            <group>
+                                <field name="follow_up_required"/>
+                                <field name="follow_up_date"/>
+                                <field name="notes"/>
+                            </group>
+                        </page>
+                        <page string="Documents">
+                            <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Medical History Search View -->
+    <record id="view_medical_history_search" model="ir.ui.view">
+        <field name="name">hr.employee.medical.history.search</field>
+        <field name="model">hr.employee.medical.history</field>
+        <field name="arch" type="xml">
+            <search string="Medical History">
+                <field name="employee_id"/>
+                <field name="condition"/>
+                <field name="doctor_name"/>
+                <filter string="Ongoing" name="ongoing" domain="[('is_ongoing', '=', True)]"/>
+                <filter string="Critical" name="critical" domain="[('severity', '=', 'critical')]"/>
+                <filter string="Severe" name="severe" domain="[('severity', '=', 'severe')]"/>
+                <filter string="Follow-up Required" name="followup" domain="[('follow_up_required', '=', True)]"/>
+                <separator/>
+                <filter string="This Month" name="this_month" domain="[('date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Year" name="this_year" domain="[('date', '&gt;=', (context_today() - relativedelta(years=1)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Condition Type" name="group_type" context="{'group_by': 'condition_type'}"/>
+                    <filter string="Severity" name="group_severity" context="{'group_by': 'severity'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

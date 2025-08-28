@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================= -->
+    <!-- Employee Health Card Report -->
+    <!-- ============================= -->
+    <record id="report_employee_health_card" model="ir.actions.report">
+        <field name="name">Employee Health Card</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">employee_health_information.report_health_card_template</field>
+        <field name="report_file">employee_health_information.report_health_card_template</field>
+        <field name="print_report_name">'Health Card - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_health_card_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">Employee Health Card</h2>
+                        <div class="row mt32 mb32">
+                            <div class="col-6">
+                                <h3><t t-esc="o.name"/></h3>
+                                <p>
+                                    <strong>Employee ID:</strong> <t t-esc="o.employee_id_custom or o.id"/><br/>
+                                    <strong>Department:</strong> <t t-esc="o.department_id.name"/><br/>
+                                    <strong>Job Position:</strong> <t t-esc="o.job_id.name"/>
+                                </p>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Blood Group:</strong></td>
+                                        <td><span class="badge badge-danger"><t t-esc="o.blood_group"/></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Height/Weight:</strong></td>
+                                        <td><t t-esc="o.height"/> cm / <t t-esc="o.weight"/> kg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>BMI:</strong></td>
+                                        <td><t t-esc="o.bmi"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <h4>Emergency Contact</h4>
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td><strong>Name:</strong></td>
+                                        <td><t t-esc="o.emergency_contact_name"/></td>
+                                        <td><strong>Relationship:</strong></td>
+                                        <td><t t-esc="o.emergency_contact_relationship"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Primary Phone:</strong></td>
+                                        <td><t t-esc="o.emergency_contact_phone"/></td>
+                                        <td><strong>Alternative Phone:</strong></td>
+                                        <td><t t-esc="o.emergency_contact_phone2"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row" t-if="o.allergies or o.chronic_conditions">
+                            <div class="col-12">
+                                <h4>Medical Information</h4>
+                                <table class="table">
+                                    <tr t-if="o.allergies">
+                                        <td width="30%"><strong>Allergies:</strong></td>
+                                        <td><t t-esc="o.allergies"/></td>
+                                    </tr>
+                                    <tr t-if="o.chronic_conditions">
+                                        <td><strong>Chronic Conditions:</strong></td>
+                                        <td><t t-esc="o.chronic_conditions"/></td>
+                                    </tr>
+                                    <tr t-if="o.current_medications">
+                                        <td><strong>Current Medications:</strong></td>
+                                        <td><t t-esc="o.current_medications"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <h4>Insurance Information</h4>
+                                <table class="table">
+                                    <tr>
+                                        <td width="30%"><strong>Provider:</strong></td>
+                                        <td><t t-esc="o.health_insurance_provider"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Policy Number:</strong></td>
+                                        <td><t t-esc="o.health_insurance_number"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Valid Until:</strong></td>
+                                        <td><t t-esc="o.health_insurance_expiry"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================= -->
+    <!-- Employee Health Summary Report -->
+    <!-- ============================= -->
+    <record id="report_employee_health_summary" model="ir.actions.report">
+        <field name="name">Employee Health Summary</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">employee_health_information.report_health_summary_template</field>
+        <field name="report_file">employee_health_information.report_health_summary_template</field>
+        <field name="print_report_name">'Health Summary'</field>
+    </record>
+
+    <template id="report_health_summary_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Employee Health Summary Report</h2>
+                    <p>Generated on: <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M')"/></p>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Blood Group</th>
+                                <th>Fitness Status</th>
+                                <th>Last Checkup</th>
+                                <th>Next Checkup</th>
+                                <th>Insurance Expiry</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="emp">
+                                <tr>
+                                    <td><t t-esc="emp.name"/></td>
+                                    <td><t t-esc="emp.blood_group"/></td>
+                                    <td>
+                                        <span t-attf-class="badge badge-{{'success' if emp.fitness_status == 'fit' else 'warning' if emp.fitness_status == 'restricted' else 'danger'}}">
+                                            <t t-esc="emp.fitness_status"/>
+                                        </span>
+                                    </td>
+                                    <td><t t-esc="emp.last_checkup_date"/></td>
+                                    <td><t t-esc="emp.next_checkup_date"/></td>
+                                    <td><t t-esc="emp.health_insurance_expiry"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

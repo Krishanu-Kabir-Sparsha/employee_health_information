@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Email Template for Insurance Expiry -->
+    <record id="email_template_insurance_expiry" model="mail.template">
+        <field name="name">Health Insurance Expiry Reminder</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="subject">Health Insurance Expiry Reminder - ${object.name}</field>
+        <field name="email_from">${(object.company_id.email or user.email)|safe}</field>
+        <field name="email_to">${object.work_email|safe}</field>
+        <field name="body_html"><![CDATA[
+            <p>Dear ${object.name},</p>
+            <p>This is a reminder that your health insurance policy (${object.health_insurance_number}) 
+            with ${object.health_insurance_provider} is expiring on <strong>${object.health_insurance_expiry}</strong>.</p>
+            <p>Please contact HR department to renew your insurance coverage.</p>
+            <br/>
+            <p>Best regards,<br/>HR Department</p>
+        ]]></field>
+    </record>
+
+    <!-- Email Template for Health Checkup Reminder -->
+    <record id="email_template_checkup_reminder" model="mail.template">
+        <field name="name">Health Checkup Reminder</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="subject">Health Checkup Due - ${object.name}</field>
+        <field name="email_from">${(object.company_id.email or user.email)|safe}</field>
+        <field name="email_to">${object.work_email|safe}</field>
+        <field name="body_html"><![CDATA[
+            <p>Dear ${object.name},</p>
+            <p>Your annual health checkup is due on <strong>${object.next_checkup_date}</strong>.</p>
+            <p>Please schedule your checkup appointment at your earliest convenience.</p>
+            <p>Contact HR department if you need assistance with scheduling.</p>
+            <br/>
+            <p>Best regards,<br/>HR Department</p>
+        ]]></field>
+    </record>
+
+    <!-- Activity Types -->
+    <record id="mail_activity_type_health_checkup" model="mail.activity.type">
+        <field name="name">Health Checkup</field>
+        <field name="icon">fa-heartbeat</field>
+        <field name="res_model">hr.employee</field>
+        <field name="delay_count">7</field>
+        <field name="delay_unit">days</field>
+        <field name="delay_from">previous_activity</field>
+        <field name="category">default</field>
+    </record>
+
+    <record id="mail_activity_type_vaccination" model="mail.activity.type">
+        <field name="name">Vaccination Due</field>
+        <field name="icon">fa-medkit</field>
+        <field name="res_model">hr.employee</field>
+        <field name="delay_count">14</field>
+        <field name="delay_unit">days</field>
+        <field name="category">default</field>
+    </record>
+
+    <!-- Default Health Configuration -->
+    <record id="health_config_checkup_frequency" model="ir.config_parameter">
+        <field name="key">health.checkup.frequency.months</field>
+        <field name="value">12</field>
+    </record>
+
+    <record id="health_config_insurance_reminder_days" model="ir.config_parameter">
+        <field name="key">health.insurance.reminder.days</field>
+        <field name="value">30</field>
+    </record>
+</odoo>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Health Checkup list View -->
+    <record id="view_health_checkup_list" model="ir.ui.view">
+        <field name="name">hr.employee.health.checkup.list</field>
+        <field name="model">hr.employee.health.checkup</field>
+        <field name="arch" type="xml">
+            <list string="Health Checkups" decoration-info="state == 'scheduled'" decoration-success="state == 'completed'" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="checkup_date"/>
+                <field name="checkup_type"/>
+                <field name="overall_health" widget="badge"/>
+                <field name="fitness_certificate" widget="badge"/>
+                <field name="doctor_name"/>
+                <field name="clinic_name" optional="show"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Health Checkup Form View -->
+    <record id="view_health_checkup_form" model="ir.ui.view">
+        <field name="name">hr.employee.health.checkup.form</field>
+        <field name="model">hr.employee.health.checkup</field>
+        <field name="arch" type="xml">
+            <form string="Health Checkup">
+                <header>
+                    <button name="action_complete" type="object" string="Mark as Completed" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="scheduled,in_progress,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="checkup_date"/>
+                            <field name="checkup_type"/>
+                            <field name="next_checkup_date"/>
+                        </group>
+                        <group>
+                            <field name="doctor_name"/>
+                            <field name="clinic_name"/>
+                            <field name="overall_health" widget="selection_badge"/>
+                            <field name="fitness_certificate" widget="selection_badge"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Vital Signs">
+                            <group>
+                                <group string="Blood Pressure">
+                                    <field name="blood_pressure_systolic"/>
+                                    <field name="blood_pressure_diastolic"/>
+                                </group>
+                                <group string="Other Vitals">
+                                    <field name="pulse_rate"/>
+                                    <field name="temperature"/>
+                                    <field name="respiratory_rate"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Test Results">
+                            <group>
+                                <group string="Blood Tests">
+                                    <field name="blood_sugar"/>
+                                    <field name="cholesterol_total"/>
+                                    <field name="cholesterol_hdl"/>
+                                    <field name="cholesterol_ldl"/>
+                                </group>
+                                <group string="Other Tests">
+                                    <field name="vision_status"/>
+                                    <field name="hearing_status"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Assessment">
+                            <group>
+                                <field name="restrictions"/>
+                                <field name="notes"/>
+                                <field name="follow_up_required"/>
+                            </group>
+                        </page>
+                        <page string="Reports">
+                            <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Health Checkup Calendar View -->
+    <record id="view_health_checkup_calendar" model="ir.ui.view">
+        <field name="name">hr.employee.health.checkup.calendar</field>
+        <field name="model">hr.employee.health.checkup</field>
+        <field name="arch" type="xml">
+            <calendar string="Health Checkups" date_start="checkup_date" color="checkup_type">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="checkup_type"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Health Checkup Search View -->
+    <record id="view_health_checkup_search" model="ir.ui.view">
+        <field name="name">hr.employee.health.checkup.search</field>
+        <field name="model">hr.employee.health.checkup</field>
+        <field name="arch" type="xml">
+            <search string="Health Checkups">
+                <field name="employee_id"/>
+                <field name="doctor_name"/>
+                <field name="clinic_name"/>
+                <filter string="Scheduled" name="scheduled" domain="[('state', '=', 'scheduled')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                <filter string="Upcoming" name="upcoming" domain="[('checkup_date', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Fit to Work" name="fit" domain="[('fitness_certificate', '=', 'fit')]"/>
+                <filter string="Restricted" name="restricted" domain="[('fitness_certificate', '=', 'fit_with_restrictions')]"/>
+                <filter string="Unfit" name="unfit" domain="[('fitness_certificate', 'in', ['temporarily_unfit', 'permanently_unfit'])]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Type" name="group_type" context="{'group_by': 'checkup_type'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Month" name="group_month" context="{'group_by': 'checkup_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Health Checkup Pivot View -->
+    <record id="view_health_checkup_pivot" model="ir.ui.view">
+        <field name="name">hr.employee.health.checkup.pivot</field>
+        <field name="model">hr.employee.health.checkup</field>
+        <field name="arch" type="xml">
+            <pivot string="Health Checkup Analysis">
+                <field name="checkup_type" type="row"/>
+                <field name="fitness_certificate" type="col"/>
+                <field name="employee_id" type="measure" widget="integer"/>
+            </pivot>
+        </field>
+    </record>
+</odoo>

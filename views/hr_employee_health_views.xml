@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- =================== -->
+    <!-- Medical History Views -->
+    <!-- =================== -->
+
+    <record id="view_medical_history_list" model="ir.ui.view">
+        <field name="name">hr.employee.medical.history.list</field>
+        <field name="model">hr.employee.medical.history</field>
+        <field name="arch" type="xml">
+            <list string="Medical History">
+                <field name="employee_id"/>
+                <field name="diagnosis_date"/>
+                <field name="condition"/>
+                <field name="condition_type"/>
+                <field name="severity"/>
+                <field name="is_ongoing"/>
+                <field name="follow_up_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_medical_history_form" model="ir.ui.view">
+        <field name="name">hr.employee.medical.history.form</field>
+        <field name="model">hr.employee.medical.history</field>
+        <field name="arch" type="xml">
+            <form string="Medical History">
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="diagnosis_date"/>
+                        <field name="condition"/>
+                        <field name="condition_type"/>
+                        <field name="severity"/>
+                        <field name="is_ongoing"/>
+                        <field name="follow_up_date"/>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- =================== -->
+    <!-- Vaccination Views -->
+    <!-- =================== -->
+
+    <record id="view_vaccination_list" model="ir.ui.view">
+        <field name="name">hr.employee.vaccination.list</field>
+        <field name="model">hr.employee.vaccination</field>
+        <field name="arch" type="xml">
+            <list string="Vaccination">
+                <field name="employee_id"/>
+                <field name="vaccine_name"/>
+                <field name="date_administered"/>
+                <field name="next_due_date"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vaccination_form" model="ir.ui.view">
+        <field name="name">hr.employee.vaccination.form</field>
+        <field name="model">hr.employee.vaccination</field>
+        <field name="arch" type="xml">
+            <form string="Vaccination">
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="vaccine_name"/>
+                        <field name="date_administered"/>
+                        <field name="next_due_date"/>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- =================== -->
+    <!-- Health Checkup Views -->
+    <!-- =================== -->
+
+    <record id="view_health_checkup_list" model="ir.ui.view">
+        <field name="name">hr.employee.health.checkup.list</field>
+        <field name="model">hr.employee.health.checkup</field>
+        <field name="arch" type="xml">
+            <list string="Health Checkups">
+                <field name="employee_id"/>
+                <field name="checkup_date"/>
+                <field name="doctor_name"/>
+                <field name="overall_health"/>
+                <field name="fitness_certificate"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_health_checkup_form" model="ir.ui.view">
+        <field name="name">hr.employee.health.checkup.form</field>
+        <field name="model">hr.employee.health.checkup</field>
+        <field name="arch" type="xml">
+            <form string="Health Checkup">
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="checkup_date"/>
+                        <field name="doctor_name"/>
+                        <field name="blood_pressure_systolic"/>
+                        <field name="blood_pressure_diastolic"/>
+                        <field name="pulse_rate"/>
+                        <field name="temperature"/>
+                        <field name="respiratory_rate"/>
+                        <field name="overall_health"/>
+                        <field name="fitness_certificate"/>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- =================== -->
+    <!-- Actions & Menu Items -->
+    <!-- =================== -->
+
+    <record id="action_medical_history" model="ir.actions.act_window">
+        <field name="name">Medical History</field>
+        <field name="res_model">hr.employee.medical.history</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_vaccination" model="ir.actions.act_window">
+        <field name="name">Vaccination</field>
+        <field name="res_model">hr.employee.vaccination</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_health_checkup" model="ir.actions.act_window">
+        <field name="name">Health Checkup</field>
+        <field name="res_model">hr.employee.health.checkup</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- =================== -->
+    <!-- Employee Form Inheritance (Main Fix) -->
+    <!-- =================== -->
+
+    <record id="view_employee_health_management_form" model="ir.ui.view">
+        <field name="name">hr.employee.health.management.form</field>
+        <field name="model">hr.employee</field>
+        <!-- IMPORTANT: inherit from ohrms_core, not base hr -->
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Health Management">
+                    <notebook>
+                        <!-- Dashboard -->
+                        <page string="Dashboard">
+                            <group>
+                                <field name="blood_group"/>
+                                <field name="height"/>
+                                <field name="weight"/>
+                                <field name="bmi"/>
+                            </group>
+                        </page>
+
+                        <!-- Medical History -->
+                        <page string="Medical History">
+                            <field name="medical_history_ids">
+                                <list editable="bottom">
+                                    <field name="condition"/>
+                                    <field name="diagnosis_date"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Vaccinations -->
+                        <page string="Vaccinations">
+                            <field name="vaccination_ids">
+                                <list editable="bottom">
+                                    <field name="vaccine_name"/>
+                                    <field name="date_administered"/>
+                                    <field name="next_due_date"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Health Checkups -->
+                        <page string="Health Checkups">
+                            <field name="health_checkup_ids">
+                                <list editable="bottom">
+                                    <field name="checkup_date"/>
+                                    <field name="doctor_name"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <!-- Reports -->
+                        <page string="Reports">
+                            <group>
+                                <button name="%(report_employee_health_card)d" 
+                                        type="action" 
+                                        string="Print Health Card" 
+                                        class="btn-primary"/>
+                                <button name="%(report_employee_health_summary)d" 
+                                        type="action" 
+                                        string="Health Summary" 
+                                        class="btn-secondary"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
