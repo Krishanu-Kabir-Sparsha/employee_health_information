@@ -1,12 +1,12 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_medical_history_user,hr.employee.medical.history.user,model_hr_employee_medical_history,base.group_user,1,0,0,0
+access_medical_history_user,hr.employee.medical.history.user,model_hr_employee_medical_history,base.group_user,1,0,1,0
 access_medical_history_officer,hr.employee.medical.history.officer,model_hr_employee_medical_history,group_health_officer,1,1,1,1
 access_medical_history_manager,hr.employee.medical.history.manager,model_hr_employee_medical_history,hr.group_hr_manager,1,1,1,1
 
-access_vaccination_user,hr.employee.vaccination.user,model_hr_employee_vaccination,base.group_user,1,0,0,0
+access_vaccination_user,hr.employee.vaccination.user,model_hr_employee_vaccination,base.group_user,1,0,1,0
 access_vaccination_officer,hr.employee.vaccination.officer,model_hr_employee_vaccination,group_health_officer,1,1,1,1
 access_vaccination_manager,hr.employee.vaccination.manager,model_hr_employee_vaccination,hr.group_hr_manager,1,1,1,1
 
-access_health_checkup_user,hr.employee.health.checkup.user,model_hr_employee_health_checkup,base.group_user,1,0,0,0
+access_health_checkup_user,hr.employee.health.checkup.user,model_hr_employee_health_checkup,base.group_user,1,1,1,1
 access_health_checkup_officer,hr.employee.health.checkup.officer,model_hr_employee_health_checkup,group_health_officer,1,1,1,1
 access_health_checkup_manager,hr.employee.health.checkup.manager,model_hr_employee_health_checkup,hr.group_hr_manager,1,1,1,1

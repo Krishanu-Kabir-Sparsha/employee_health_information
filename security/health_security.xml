@@ -9,7 +9,8 @@
     </record>
     
     <!-- Medical Data Privacy Rules -->
-    <!-- Health Info Privacy Rule -->
+
+    <!-- Health Info Privacy Rule (Normal Users) -->
     <record id="hr_employee_health_privacy_rule" model="ir.rule">
         <field name="name">Employee Health Information Privacy</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
@@ -25,8 +26,20 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
-    
-    <!-- Medical History Privacy -->
+
+    <!-- Admin Access Rule for hr.employee -->
+    <record id="hr_employee_admin_access" model="ir.rule">
+        <field name="name">Employee Health Info Admin Access</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Medical History Privacy Rule (Normal Users) -->
     <record id="medical_history_privacy_rule" model="ir.rule">
         <field name="name">Medical History Privacy Rule</field>
         <field name="model_id" ref="model_hr_employee_medical_history"/>
@@ -35,5 +48,22 @@
         ]</field>
         <!-- Restrict to HR Manager + Health Officer -->
         <field name="groups" eval="[(4, ref('hr.group_hr_manager')), (4, ref('employee_health_information.group_health_officer'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
+
+    <!-- Admin Access Rule for hr.employee.medical.history -->
+    <record id="medical_history_admin_access" model="ir.rule">
+        <field name="name">Medical History Admin Access</field>
+        <field name="model_id" ref="model_hr_employee_medical_history"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
 </odoo>

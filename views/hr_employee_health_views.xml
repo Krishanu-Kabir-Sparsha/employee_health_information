@@ -149,69 +149,76 @@
     <record id="view_employee_health_management_form" model="ir.ui.view">
         <field name="name">hr.employee.health.management.form</field>
         <field name="model">hr.employee</field>
-        <!-- IMPORTANT: inherit from ohrms_core, not base hr -->
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//notebook" position="inside">
-                <page string="Health Management">
-                    <notebook>
-                        <!-- Dashboard -->
-                        <page string="Dashboard">
-                            <group>
-                                <field name="blood_group"/>
-                                <field name="height"/>
-                                <field name="weight"/>
-                                <field name="bmi"/>
-                            </group>
-                        </page>
+            <xpath expr="//page[@name='hr_settings']" position="after">
+                <page string="Health Management" name="health_management">
+                    <group>
+                        <group string="Basic Health Information">
+                            <field name="blood_group"/>
+                            <field name="height"/>
+                            <field name="weight"/>
+                            <field name="bmi" readonly="1"/>
+                            <field name="fitness_status"/>
+                        </group>
+                        <group string="Emergency Information">
+                            <field name="emergency_contact_name"/>
+                            <field name="emergency_contact_relationship"/>
+                            <field name="emergency_contact_phone"/>
+                            <field name="emergency_contact_phone2"/>
+                            <field name="emergency_blood_bank"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group string="Medical Conditions">
+                            <field name="allergies"/>
+                            <field name="chronic_conditions"/>
+                            <field name="current_medications"/>
+                        </group>
+                        <group string="Medical Insurance">
+                            <field name="health_insurance_provider"/>
+                            <field name="health_insurance_number"/>
+                            <field name="health_insurance_type"/>
+                            <field name="health_insurance_expiry"/>
+                        </group>
+                    </group>
 
-                        <!-- Medical History -->
-                        <page string="Medical History">
-                            <field name="medical_history_ids">
-                                <list editable="bottom">
-                                    <field name="condition"/>
-                                    <field name="diagnosis_date"/>
-                                    <field name="notes"/>
-                                </list>
-                            </field>
-                        </page>
+                    <group>
+                        <group string="Health Status">
+                            <field name="disability_status"/>
+                            <field name="disability_description"/>
+                            <field name="covid_vaccination_status"/>
+                        </group>
+                        <group string="Occupational Health">
+                            <field name="occupational_hazards"/>
+                            <field name="ppe_required"/>
+                            <field name="work_restrictions"/>
+                        </group>
+                    </group>
 
-                        <!-- Vaccinations -->
-                        <page string="Vaccinations">
-                            <field name="vaccination_ids">
-                                <list editable="bottom">
-                                    <field name="vaccine_name"/>
-                                    <field name="date_administered"/>
-                                    <field name="next_due_date"/>
-                                </list>
-                            </field>
-                        </page>
+                    <group>
+                        <group string="Health Checkup Information">
+                            <field name="last_checkup_date" readonly="1"/>
+                            <field name="next_checkup_date" readonly="1"/>
+                        </group>
+                        <group string="Medical Records Summary">
+                            <label for="vaccination_ids"/>
+                            <div>
+                                <field name="vaccination_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                <button name="action_add_vaccination" type="object" string="Manage Vaccinations" class="btn-link"/>
+                            </div>
+                            <label for="medical_history_ids"/>
+                            <div>
+                                <field name="medical_history_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                <button name="action_add_medical_history" type="object" string="Manage Medical History" class="btn-link"/>
+                            </div>
+                        </group>
+                    </group>
 
-                        <!-- Health Checkups -->
-                        <page string="Health Checkups">
-                            <field name="health_checkup_ids">
-                                <list editable="bottom">
-                                    <field name="checkup_date"/>
-                                    <field name="doctor_name"/>
-                                    <field name="notes"/>
-                                </list>
-                            </field>
-                        </page>
-
-                        <!-- Reports -->
-                        <page string="Reports">
-                            <group>
-                                <button name="%(report_employee_health_card)d" 
-                                        type="action" 
-                                        string="Print Health Card" 
-                                        class="btn-primary"/>
-                                <button name="%(report_employee_health_summary)d" 
-                                        type="action" 
-                                        string="Health Summary" 
-                                        class="btn-secondary"/>
-                            </group>
-                        </page>
-                    </notebook>
+                    <group string="Medical Documents">
+                        <field name="medical_document_ids" widget="many2many_binary" nolabel="1"/>
+                    </group>
                 </page>
             </xpath>
         </field>

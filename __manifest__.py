@@ -27,6 +27,7 @@
     'data': [
         # Security
         'security/health_security.xml',
+        'security/hr_employee_admin_access.xml',
         'security/ir.model.access.csv',
         
         # Data
