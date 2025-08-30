@@ -199,8 +199,8 @@
 
                     <group>
                         <group string="Health Checkup Information">
-                            <field name="last_checkup_date" readonly="1"/>
-                            <field name="next_checkup_date" readonly="1"/>
+                            <field name="last_checkup_date" />
+                            <field name="next_checkup_date" />
                         </group>
                         <group string="Medical Records Summary">
                             <label for="vaccination_ids"/>
