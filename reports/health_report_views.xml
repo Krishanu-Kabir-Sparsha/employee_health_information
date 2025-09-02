@@ -38,7 +38,7 @@
     <!-- ============================= -->
     <!-- Report Actions -->
     <!-- ============================= -->
-    <!-- For Health Card Report -->
+    <!-- Health Card Report Action -->
     <record id="report_employee_health_card" model="ir.actions.report">
         <field name="name">Employee Health Card</field>
         <field name="model">hr.employee</field>
@@ -48,26 +48,20 @@
         <field name="print_report_name">'Health Card - %s' % (object.name)</field>
         <field name="binding_model_id" ref="hr.model_hr_employee"/>
         <field name="binding_type">report</field>
-        <!-- Add this line to ensure it gets active records -->
-        <field name="multi">True</field>
     </record>
 
-    <!-- For Health Summary Report -->
+    <!-- Health Summary Report Action -->
     <record id="report_employee_health_summary" model="ir.actions.report">
-        <field name="name">Employee Health Summary</field>
+        <field name="name">Health Summary</field>
         <field name="model">hr.employee</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">employee_health_information.report_health_summary_template</field>
         <field name="report_file">employee_health_information.report_health_summary_template</field>
         <field name="print_report_name">'Health Summary'</field>
-        <!-- Add these lines -->
-        <field name="binding_model_id" ref="hr.model_hr_employee"/>
-        <field name="binding_type">report</field>
-        <field name="multi">True</field>
     </record>
 
 
-    <!-- Add this action for Print Health Cards -->
+    <!-- Update Print Health Cards action -->
     <record id="action_print_health_cards" model="ir.actions.act_window">
         <field name="name">Print Health Cards</field>
         <field name="res_model">hr.employee</field>
@@ -80,7 +74,7 @@
         </field>
     </record>
 
-    <!-- Add this action for Health Summary -->
+    <!-- Update Health Summary action -->
     <record id="action_health_summary" model="ir.actions.act_window">
         <field name="name">Health Summary</field>
         <field name="res_model">hr.employee</field>
@@ -101,12 +95,12 @@
         <field name="binding_view_types">list,form</field>
         <field name="state">code</field>
         <field name="code">
-    action = {
-        'type': 'ir.actions.report',
-        'report_name': 'employee_health_information.report_health_card_template',
-        'report_type': 'qweb-pdf',
-        'docs': records,
-    }
+action = {
+    'type': 'ir.actions.report',
+    'report_name': 'employee_health_information.report_health_card_template',
+    'report_type': 'qweb-pdf',
+    'docs': records,
+}
         </field>
     </record>
 
@@ -118,12 +112,12 @@
         <field name="binding_view_types">list,form</field>
         <field name="state">code</field>
         <field name="code">
-    action = {
-        'type': 'ir.actions.report',
-        'report_name': 'employee_health_information.report_health_summary_template',
-        'report_type': 'qweb-pdf',
-        'docs': records,
-    }
+action = {
+    'type': 'ir.actions.report',
+    'report_name': 'employee_health_information.report_health_summary_template',
+    'report_type': 'qweb-pdf',
+    'docs': records,
+}
         </field>
     </record>
 

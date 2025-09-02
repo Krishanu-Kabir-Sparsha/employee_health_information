@@ -22,6 +22,7 @@
         'ohrms_core',  # Open HRMS Core dependency
         'hr_holidays',  # For leave integration
         'mail',  # For notifications
+        'prt_report_attachment_preview',
         # 'documents',  # For document management (optional)
     ],
     'data': [
