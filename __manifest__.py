@@ -42,8 +42,9 @@
         'views/health_menu.xml',
         
         # Reports
-        'reports/health_report_templates.xml',
         'reports/health_report_views.xml',
+        'reports/health_report_templates.xml',
+        
     ],
     'demo': [],
     'installable': True,

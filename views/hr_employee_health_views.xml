@@ -199,8 +199,25 @@
 
                     <group>
                         <group string="Health Checkup Information">
-                            <field name="last_checkup_date" />
-                            <field name="next_checkup_date" />
+                            <div>
+                                <button name="action_schedule_checkup" 
+                                        type="object" 
+                                        string="Schedule Checkup" 
+                                        class="oe_highlight"
+                                        groups="hr.group_hr_user"/>
+                            </div>
+                            <field name="last_checkup_date" readonly="1"/>
+                            <field name="next_checkup_date" readonly="1"/>
+                            <field name="health_checkup_ids" readonly="1" nolabel="1" colspan="2">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="checkup_date"/>
+                                    <field name="checkup_type"/>
+                                    <field name="overall_health" widget="badge"/>
+                                    <field name="fitness_certificate" widget="badge"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
                         </group>
                         <group string="Medical Records Summary">
                             <label for="vaccination_ids"/>
@@ -223,4 +240,5 @@
             </xpath>
         </field>
     </record>
+    
 </odoo>

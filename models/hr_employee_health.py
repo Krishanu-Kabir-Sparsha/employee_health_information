@@ -50,6 +50,7 @@ class HrEmployeeHealth(models.Model):
         ('pending', 'Pending Assessment')
     ], string='Fitness Status', default='fit', groups="hr.group_hr_user")
 
+
     # ============ Vaccination Records ============
     vaccination_ids = fields.One2many(
         'hr.employee.vaccination',
@@ -117,14 +118,14 @@ class HrEmployeeHealth(models.Model):
             else:
                 record.bmi = 0
 
-    @api.depends('health_checkup_ids.checkup_date', 'health_checkup_ids.next_checkup_date')
+    @api.depends('health_checkup_ids.checkup_date', 'health_checkup_ids.next_checkup_date', 'health_checkup_ids.state')
     def _compute_checkup_dates(self):
         for record in self:
-            checkups = record.health_checkup_ids.sorted('checkup_date', reverse=True)
-            if checkups:
-                last = checkups[0]
+            completed_checkups = record.health_checkup_ids.filtered(lambda x: x.state == 'completed').sorted('checkup_date', reverse=True)
+            if completed_checkups:
+                last = completed_checkups[0]
                 record.last_checkup_date = last.checkup_date
-                record.next_checkup_date = last.next_checkup_date or (last.checkup_date + timedelta(days=365))
+                record.next_checkup_date = last.next_checkup_date
             else:
                 record.last_checkup_date = False
                 record.next_checkup_date = False
@@ -169,6 +170,22 @@ class HrEmployeeHealth(models.Model):
             'view_mode': 'form',
             'target': 'new',
             'context': {'default_employee_id': self.id}
+        }
+    
+    def action_schedule_checkup(self):
+        self.ensure_one()
+        return {
+            'name': _('Schedule Health Checkup'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.employee.health.checkup',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_employee_id': self.id,
+                'default_checkup_type': 'routine',
+                'form_view_ref': 'employee_health_information.view_health_checkup_form',
+            },
+            'views': [(False, 'form')],
         }
 
     # =================== Cron Job Methods ===================

@@ -24,9 +24,10 @@
                             <div class="col-6">
                                 <h3><t t-esc="o.name"/></h3>
                                 <p>
-                                    <strong>Employee ID:</strong> <t t-esc="o.employee_id_custom or o.id"/><br/>
-                                    <strong>Department:</strong> <t t-esc="o.department_id.name"/><br/>
-                                    <strong>Job Position:</strong> <t t-esc="o.job_id.name"/>
+                                    <!-- Change this line -->
+                                    <strong>Employee ID:</strong> <t t-esc="o.id"/><br/>
+                                    <strong>Department:</strong> <t t-esc="o.department_id.name or ''"/><br/>
+                                    <strong>Job Position:</strong> <t t-esc="o.job_id.name or ''"/>
                                 </p>
                             </div>
                             <div class="col-6">

@@ -10,7 +10,7 @@
         <field name="context">{'search_default_group_fitness': 1}</field>
     </record>
 
-    <!-- Graph View for Health Statistics -->
+    <!-- Graph View -->
     <record id="view_employee_health_graph" model="ir.ui.view">
         <field name="name">hr.employee.health.graph</field>
         <field name="model">hr.employee</field>
@@ -22,7 +22,7 @@
         </field>
     </record>
 
-    <!-- Pivot View for Health Analysis -->
+    <!-- Pivot View -->
     <record id="view_employee_health_pivot" model="ir.ui.view">
         <field name="name">hr.employee.health.pivot</field>
         <field name="model">hr.employee</field>
@@ -35,7 +35,102 @@
         </field>
     </record>
 
-    <!-- Menu Items for Reports -->
+    <!-- ============================= -->
+    <!-- Report Actions -->
+    <!-- ============================= -->
+    <!-- For Health Card Report -->
+    <record id="report_employee_health_card" model="ir.actions.report">
+        <field name="name">Employee Health Card</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">employee_health_information.report_health_card_template</field>
+        <field name="report_file">employee_health_information.report_health_card_template</field>
+        <field name="print_report_name">'Health Card - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_type">report</field>
+        <!-- Add this line to ensure it gets active records -->
+        <field name="multi">True</field>
+    </record>
+
+    <!-- For Health Summary Report -->
+    <record id="report_employee_health_summary" model="ir.actions.report">
+        <field name="name">Employee Health Summary</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">employee_health_information.report_health_summary_template</field>
+        <field name="report_file">employee_health_information.report_health_summary_template</field>
+        <field name="print_report_name">'Health Summary'</field>
+        <!-- Add these lines -->
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_type">report</field>
+        <field name="multi">True</field>
+    </record>
+
+
+    <!-- Add this action for Print Health Cards -->
+    <record id="action_print_health_cards" model="ir.actions.act_window">
+        <field name="name">Print Health Cards</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="hr.view_employee_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Select employees to print their health cards
+            </p>
+        </field>
+    </record>
+
+    <!-- Add this action for Health Summary -->
+    <record id="action_health_summary" model="ir.actions.act_window">
+        <field name="name">Health Summary</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="hr.view_employee_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Select employees to generate health summary
+            </p>
+        </field>
+    </record>
+
+    <!-- Server action for printing health cards -->
+    <record id="action_server_print_health_cards" model="ir.actions.server">
+        <field name="name">Print Health Cards</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+    action = {
+        'type': 'ir.actions.report',
+        'report_name': 'employee_health_information.report_health_card_template',
+        'report_type': 'qweb-pdf',
+        'docs': records,
+    }
+        </field>
+    </record>
+
+    <!-- Server action for health summary -->
+    <record id="action_server_print_health_summary" model="ir.actions.server">
+        <field name="name">Print Health Summary</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+    action = {
+        'type': 'ir.actions.report',
+        'report_name': 'employee_health_information.report_health_summary_template',
+        'report_type': 'qweb-pdf',
+        'docs': records,
+    }
+        </field>
+    </record>
+
+
+    <!-- ============================= -->
+    <!-- Menu Items -->
+    <!-- ============================= -->
     <menuitem id="menu_health_statistics" 
               name="Statistics" 
               parent="menu_health_reports" 
@@ -45,12 +140,12 @@
     <menuitem id="menu_print_health_card" 
               name="Print Health Cards" 
               parent="menu_health_reports" 
-              action="report_employee_health_card" 
+              action="action_print_health_cards"
               sequence="20"/>
 
     <menuitem id="menu_health_summary_report" 
               name="Health Summary" 
               parent="menu_health_reports" 
-              action="report_employee_health_summary" 
+              action="action_health_summary"
               sequence="30"/>
 </odoo>
